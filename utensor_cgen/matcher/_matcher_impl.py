@@ -207,19 +207,20 @@ class uTensorGraphMatch(object):
       self.patrn2subj_tensor_map[pattern_tensor.name] = target_tensor
       self.subj2patrn_tensor_map[target_tensor.name] = pattern_tensor
     
-  def replace_with(self, other_ugraph):
+  def replace_with(self, callback):
     """
     Replace matched subgraph with a given ugraph
     """
     pass
 
-  _CHARSET = ascii_letters + digits
+  CHARSET = ascii_letters + digits
 
-  def _random_surfix(self, length=8):
-    chars = choices(self._CHARSET, k=length)
+  @classmethod
+  def _random_surfix(cls, length=8):
+    chars = choices(cls.CHARSET, k=length)
     return ''.join(chars)
 
-  def _new_ugraph_with_surfix(self, ugraph, surfix=None):
+  def new_ugraph_with_surfix(self, ugraph, surfix=None):
     if surfix is None:
       surfix = self._random_surfix()
     new_ugraph = deepcopy(ugraph)

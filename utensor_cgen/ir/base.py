@@ -289,6 +289,8 @@ class uTensorGraph(IRBase, _NoShallowCopyMixin):
   
   @property
   def ops(self):
+    if not self.topo_order:
+      topologic_order_graph(self)
     return [self.ops_info[name] for name in self.topo_order]
 
   def add_op(self, op):
