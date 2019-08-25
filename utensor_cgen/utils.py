@@ -371,7 +371,6 @@ def random_str(length=8):
   return ''.join(chars)
 
 def prepare_cxx_var_name(tensor_name):
-  inline = tensor_name.replace(":", "_").replace("/", "_")
-  preapred = "inline_{}".format(inline)
+  preapred = tensor_name.replace(":", "_").replace("/", "_")
   return preapred
 

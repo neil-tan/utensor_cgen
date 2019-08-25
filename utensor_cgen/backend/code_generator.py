@@ -185,7 +185,7 @@ class CodeGenerator(object):
       tensor_set.update(names)
       names = [it_tensor.name for it_tensor in op_info.output_tensors]
       tensor_set.update(names)
-    #TODO: check if all names are valid macro syntax
+  
     for it_tensor_name in tensor_set:
       tensor_name = prepare_cxx_var_name(it_tensor_name)
       if tensor_name not in tensor_list:
