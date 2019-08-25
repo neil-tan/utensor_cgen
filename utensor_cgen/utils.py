@@ -17,7 +17,8 @@ from tensorflow.tools.graph_transforms import TransformGraph
 from utensor_cgen.logger import logger
 
 __all__ = ["save_idx", "save_consts", "save_graph", "log_graph",
-           "NamescopedKWArgsParser", "NArgsParam", "MUST_OVERWRITEN"]
+           "NamescopedKWArgsParser", "NArgsParam", "MUST_OVERWRITEN",
+           "prepare_cxx_var_name"]
 
 
 def log_graph(graph_or_graph_def, logdir):
@@ -368,3 +369,9 @@ def prune_graph(ugraph):
 def random_str(length=8):
   chars = choices(ascii_letters+digits, k=length)
   return ''.join(chars)
+
+def prepare_cxx_var_name(tensor_name):
+  inline = tensor_name.replace(":", "_").replace("/", "_")
+  preapred = "inline_{}".format(inline)
+  return preapred
+

@@ -776,8 +776,6 @@ class TensorNamesHeaderSnippet(Snippet):
 
   def __init__(self, guard_name, tensor_list):
     Snippet.__init__(self)
-    if placeholders is None:
-      placeholders = []
     self.template_vars["header_guard"] = "_{}_TENSOR_NAMES_H".format(guard_name.upper())
     self.template_vars["tensor_list"] = tensor_list
     self.template_vars["num_tensors"] = len(tensor_list)

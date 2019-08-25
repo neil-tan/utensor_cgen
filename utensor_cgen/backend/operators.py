@@ -7,7 +7,7 @@ import idx2numpy as idx2np
 from utensor_cgen.logger import logger
 from utensor_cgen.matcher import OpEqualityDelegate, _morphism
 from utensor_cgen.transformer.optimizer import RefCntOptimizer
-from utensor_cgen.utils import NamescopedKWArgsParser
+from utensor_cgen.utils import NamescopedKWArgsParser, prepare_cxx_var_name
 
 from .snippets import *  # pylint: disable=W0401,W0614
 
@@ -588,7 +588,7 @@ class _InlineOperator(_Operator):
     parser = NamescopedKWArgsParser(RefCntOptimizer.KWARGS_NAMESCOPE,
                                     op_info.op_attr)
     ref_count = parser.get('ref_counts', [0])[0]
-    pre_tname = self._prepare_tensor_name(out_tname)
+    pre_tname = prepare_cxx_var_name(out_tname)
     inline_tname = self._prepare_inline_array_name(out_tname)
     value = op_info.op_attr['value'].value.np_array.flatten()
     self._snippet = CreateTensorBinarySnippet(out_tname, tensor_shape=tensor_shape,
@@ -604,12 +604,8 @@ class _InlineOperator(_Operator):
     weight_container = kwargs['weight_container']                             
     weight_container.add_snippet(weight_snippet)
 
-  def _prepare_tensor_name(self, tensor_name):
-    prepared = tensor_name.replace(":", "_").replace("/", "_")
-    return prepared
-
   def _prepare_inline_array_name(self, tensor_name):
-    inline = tensor_name.replace(":", "_").replace("/", "_")
+    inline = prepare_cxx_var_name(tensor_name)
     preapred = "inline_{}".format(inline)
     return preapred
 

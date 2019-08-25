@@ -13,7 +13,7 @@ from utensor_cgen.frontend import FrontendSelector
 from utensor_cgen.ir import uTensorGraph
 from utensor_cgen.transformer.optimizer import RefCntOptimizer
 from utensor_cgen.transformer.pipeline import TransformerPipeline
-from utensor_cgen.utils import NamescopedKWArgsParser
+from utensor_cgen.utils import NamescopedKWArgsParser, prepare_cxx_var_name
 
 from .operators import OperatorFactory
 from .snippets import (CommentSnippet, ContextGlobalArrayContainer,
@@ -177,6 +177,7 @@ class CodeGenerator(object):
 
   def _get_tensor_name_index_list(self, ugraph):
     tensor_set = set()
+    tensor_list = list()
     for _, op_name in enumerate(ugraph.topo_order):
       op_info = ugraph.ops_info[op_name]
       #NT: scanning both inputs and outputs because tensors might not always have an origin in the final ugraph
@@ -185,6 +186,13 @@ class CodeGenerator(object):
       names = [it_tensor.name for it_tensor in op_info.output_tensors]
       tensor_set.update(names)
     #TODO: check if all names are valid macro syntax
-    tensor_set = sorted(tensor_set)
-    result = dict(zip(list(tensor_set), list(range(len(tensor_set)))))
+    for it_tensor_name in tensor_set:
+      tensor_name = prepare_cxx_var_name(it_tensor_name)
+      if tensor_name not in tensor_list:
+        tensor_list.append(tensor_name)
+      else:
+        raise ValueError('Tensor Name: {} collided'.format(tensor_name))
+
+    tensor_list = sorted(tensor_list)
+    result = dict(zip(list(tensor_list), list(range(len(tensor_list)))))
     return result
