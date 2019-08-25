@@ -22,7 +22,7 @@ __all__ = ["Snippet", "SnippetContainerBase",
            "ContextGlobalArrayContainer", "QuantRangeForMultiplicationSnippet",
            "FusedConv2DMaxpoolOpSnippet", "QuantizedFusedConv2DMaxpoolOpSnippet",
            "GatherOpSnippet",
-           "CreateTensorRamSnippet", "Uint8Q7OriginSnippet"]
+           "CreateTensorRamSnippet", "Uint8Q7OriginSnippet", "TensorNamesHeaderSnippet"]
 
 # TODO: Better abstraction, i.e a better backend for code generation
 class CreateTensorIdxSnippet(Snippet):
@@ -769,6 +769,18 @@ class ContextHeaderSnippet(Snippet):
     self.template_vars["header_guard"] = "_{}_H".format(guard_name.upper())
     self.template_vars["graph_name"] = graph_name
     self.template_vars["placeholders"] = placeholders
+
+class TensorNamesHeaderSnippet(Snippet):
+  __template_name__ = "snippets/tensor_names.hpp"
+  __headers__ = set()
+
+  def __init__(self, guard_name, tensor_list):
+    Snippet.__init__(self)
+    if placeholders is None:
+      placeholders = []
+    self.template_vars["header_guard"] = "_{}_TENSOR_NAMES_H".format(guard_name.upper())
+    self.template_vars["tensor_list"] = tensor_list
+    self.template_vars["num_tensors"] = len(tensor_list)
 
 class WeightSnippet(Snippet):
   __template_name__ = "snippets/weight_snippet.hpp"
